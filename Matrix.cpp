@@ -138,3 +138,34 @@ void Matrix::printHistory() const {
 void Matrix::setDestructorLog(bool enabled) {
     destructorLog = enabled;
 }
+
+// ---------------------------------------------------------------
+// Унарные операции
+// ---------------------------------------------------------------
+
+Matrix& Matrix::operator++() {
+    addScalar(1.0);
+    log("prefix ++ -> " + str());
+    return *this;
+}
+
+// Постфиксная форма возвращает копию состояния ДО изменения
+Matrix Matrix::operator++(int) {
+    Matrix old(*this);
+    addScalar(1.0);
+    log("postfix ++ -> " + str());
+    return old;
+}
+
+Matrix& Matrix::operator--() {
+    addScalar(-1.0);
+    log("prefix -- -> " + str());
+    return *this;
+}
+
+Matrix Matrix::operator--(int) {
+    Matrix old(*this);
+    addScalar(-1.0);
+    log("postfix -- -> " + str());
+    return old;
+}
