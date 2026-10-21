@@ -214,3 +214,65 @@ Matrix& Matrix::operator/=(const Matrix& rhs) {
     log("/= " + r + " -> " + str());
     return *this;
 }
+
+// ---------------------------------------------------------------
+// Преобразование
+// ---------------------------------------------------------------
+
+Matrix::operator double() const {
+    ++readCount;
+    return det();
+}
+
+// ---------------------------------------------------------------
+// Бинарные арифметические операции (через составные)
+// lhs передаётся по значению: это уже копия, её можно менять
+// ---------------------------------------------------------------
+
+Matrix operator+(Matrix lhs, const Matrix& rhs) {
+    lhs += rhs;
+    return lhs;
+}
+
+Matrix operator-(Matrix lhs, const Matrix& rhs) {
+    lhs -= rhs;
+    return lhs;
+}
+
+Matrix operator*(Matrix lhs, const Matrix& rhs) {
+    lhs *= rhs;
+    return lhs;
+}
+
+Matrix operator/(Matrix lhs, const Matrix& rhs) {
+    lhs /= rhs;
+    return lhs;
+}
+
+// ---------------------------------------------------------------
+// Сравнение по определителям
+// ---------------------------------------------------------------
+
+bool operator==(const Matrix& lhs, const Matrix& rhs) {
+    return std::fabs(lhs.det() - rhs.det()) < EPS;
+}
+
+bool operator!=(const Matrix& lhs, const Matrix& rhs) {
+    return !(lhs == rhs);
+}
+
+bool operator<(const Matrix& lhs, const Matrix& rhs) {
+    return lhs.det() < rhs.det() - EPS;
+}
+
+bool operator>(const Matrix& lhs, const Matrix& rhs) {
+    return rhs < lhs;
+}
+
+bool operator<=(const Matrix& lhs, const Matrix& rhs) {
+    return !(rhs < lhs);
+}
+
+bool operator>=(const Matrix& lhs, const Matrix& rhs) {
+    return !(lhs < rhs);
+}
