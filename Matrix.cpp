@@ -169,3 +169,48 @@ Matrix Matrix::operator--(int) {
     log("postfix -- -> " + str());
     return old;
 }
+
+// ---------------------------------------------------------------
+// Арифметическое присваивание
+// ---------------------------------------------------------------
+
+Matrix& Matrix::operator+=(const Matrix& rhs) {
+    std::string r = rhs.str();   // запоминаем до изменения (на случай a += a)
+    a11 += rhs.a11;
+    a12 += rhs.a12;
+    a21 += rhs.a21;
+    a22 += rhs.a22;
+    log("+= " + r + " -> " + str());
+    return *this;
+}
+
+Matrix& Matrix::operator-=(const Matrix& rhs) {
+    std::string r = rhs.str();
+    a11 -= rhs.a11;
+    a12 -= rhs.a12;
+    a21 -= rhs.a21;
+    a22 -= rhs.a22;
+    log("-= " + r + " -> " + str());
+    return *this;
+}
+
+Matrix& Matrix::operator*=(const Matrix& rhs) {
+    std::string r = rhs.str();
+    multiplyBy(rhs.a11, rhs.a12, rhs.a21, rhs.a22);
+    log("*= " + r + " -> " + str());
+    return *this;
+}
+
+Matrix& Matrix::operator/=(const Matrix& rhs) {
+    std::string r = rhs.str();
+    double d = rhs.det();
+    if (std::fabs(d) < EPS) {
+        std::cout << "Error: cannot divide by a singular matrix " << r << std::endl;
+        log("/= " + r + " rejected (singular matrix), nothing changed");
+        return *this;
+    }
+    // Обратная матрица: 1/det * [[a22, -a12], [-a21, a11]]
+    multiplyBy(rhs.a22 / d, -rhs.a12 / d, -rhs.a21 / d, rhs.a11 / d);
+    log("/= " + r + " -> " + str());
+    return *this;
+}
